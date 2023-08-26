@@ -1,0 +1,6 @@
+classes= 1
+train  = /Users/ldu77/Desktop/Python/tello-ai-yolo/darknet/training/tello/train.txt
+valid  = /Users/ldu77/Desktop/Python/tello-ai-yolo/darknet/training/tello/test.txt
+names  = tello.names
+backup = /Users/ldu77/Desktop/Python/tello-ai-yolo/darknet/backup/
+
