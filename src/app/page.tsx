@@ -42,7 +42,7 @@ export default function App() {
         <>
           <LogoBox>
             <LogoImage src={NebulaLogoImage} alt="logo" />
-            <LogoTitle>NEBULA</LogoTitle>
+            <LogoTitle>EARTH</LogoTitle>
           </LogoBox>
           <ImgBox>
             <MainImageLeft src={MainPageImageLeft} alt="main-page-image-left" />
