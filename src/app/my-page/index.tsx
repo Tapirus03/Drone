@@ -101,22 +101,34 @@ export const MyPage = ({ isSuccess }: Props) => {
             <TokenBalanceBox>
               <TokenImage src={EthLogoImage} alt="credit-card-image" />
               <TokenName>Ethereum</TokenName>
-              <TokenBalance>321.21 ETH</TokenBalance>
+              <TokenBalanceBox2>
+                <TokenBalance>0.39 ETH</TokenBalance>
+                <ConvertTokenUSD>≈ 1,000 USD</ConvertTokenUSD>
+              </TokenBalanceBox2>
             </TokenBalanceBox>
             <TokenBalanceBox>
               <TokenImage src={UsdtLogoImage} algitt="credit-card-image" />
               <TokenName>Tether</TokenName>
-              <TokenBalance>142.12 USDT</TokenBalance>
+              <TokenBalanceBox2>
+                <TokenBalance>149.98 USDT</TokenBalance>
+                <ConvertTokenUSD>≈ 150 USD</ConvertTokenUSD>
+              </TokenBalanceBox2>
             </TokenBalanceBox>
             <TokenBalanceBox>
               <TokenImage src={BnbLogoImage} alt="credit-card-image" />
               <TokenName>Binance</TokenName>
-              <TokenBalance>23.12 USD</TokenBalance>
+              <TokenBalanceBox2>
+                <TokenBalance>0.19578 BNB</TokenBalance>
+                <ConvertTokenUSD>≈ 60 USD</ConvertTokenUSD>
+              </TokenBalanceBox2>
             </TokenBalanceBox>
             <TokenBalanceBox>
               <TokenImage src={MaticLogoImage} alt="credit-card-image" />
               <TokenName>Polygon</TokenName>
-              <TokenBalance>2.45 MATIC</TokenBalance>
+              <TokenBalanceBox2>
+                <TokenBalance>27.73 MATIC</TokenBalance>
+                <ConvertTokenUSD>≈ 25 USD</ConvertTokenUSD>
+              </TokenBalanceBox2>
             </TokenBalanceBox>
           </TokenBalanceWrapper>
         </BottomWrapper>
@@ -224,4 +236,13 @@ const TokenName = tw.div`
 
 const TokenBalance = tw.div`
     w-150 font-sb-16 text-white text-end
+    `;
+
+const TokenBalanceBox2 = tw.div`
+    flex flex-col items-center px-5 py-5 gap-4
+    rounded-16 w-150 h-50 justify-between
+`;
+
+const ConvertTokenUSD = tw.div`
+    w-150 font-sb-12 text-gray-300 text-end
     `;
