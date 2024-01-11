@@ -267,7 +267,7 @@ const Title = tw.div`
 `;
 
 const FooterBarBox = tw.div`
-  absolute bottom-0 w-full
+  absolute bottom-0 w-full full
 `;
 
 const QrReaderVideo = tw.video`
