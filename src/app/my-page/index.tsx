@@ -69,7 +69,7 @@ export const MyPage = ({ isSuccess }: Props) => {
       <Wrapper>
         <TopWrapper>
           <UserSummaryBox>
-            <ServiceTitle>NEBULA</ServiceTitle>
+            <ServiceTitle>EARTH</ServiceTitle>
             <UserBalance>$1,235 USD</UserBalance>
             <AccountName>Account Name</AccountName>
             <AccountNumber>
@@ -101,22 +101,22 @@ export const MyPage = ({ isSuccess }: Props) => {
             <TokenBalanceBox>
               <TokenImage src={EthLogoImage} alt="credit-card-image" />
               <TokenName>Ethereum</TokenName>
-              <TokenBalance>321.21 USD</TokenBalance>
+              <TokenBalance>321.21 ETH</TokenBalance>
             </TokenBalanceBox>
             <TokenBalanceBox>
-              <TokenImage src={UsdtLogoImage} alt="credit-card-image" />
+              <TokenImage src={UsdtLogoImage} algitt="credit-card-image" />
               <TokenName>Tether</TokenName>
-              <TokenBalance>142.12 USD</TokenBalance>
+              <TokenBalance>142.12 USDT</TokenBalance>
             </TokenBalanceBox>
             <TokenBalanceBox>
               <TokenImage src={BnbLogoImage} alt="credit-card-image" />
-              <TokenName>Token Name</TokenName>
+              <TokenName>Binance</TokenName>
               <TokenBalance>23.12 USD</TokenBalance>
             </TokenBalanceBox>
             <TokenBalanceBox>
               <TokenImage src={MaticLogoImage} alt="credit-card-image" />
-              <TokenName>Token Name</TokenName>
-              <TokenBalance>2.45 USD</TokenBalance>
+              <TokenName>Polygon</TokenName>
+              <TokenBalance>2.45 MATIC</TokenBalance>
             </TokenBalanceBox>
           </TokenBalanceWrapper>
         </BottomWrapper>

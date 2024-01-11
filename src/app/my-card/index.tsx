@@ -33,7 +33,7 @@ export const MyCard = ({ isSuccess }: Props) => {
         <CardImageWrapper>
           <CardImage>
             <CardLogo src={NebulaLogoImage} alt="mastercard" width={56} height={34} />
-            <CardTitle>NEBULA</CardTitle>
+            <CardTitle>EARTH</CardTitle>
             <CardUser>John Doe</CardUser>
             <CardAddress>
               {walletAddress?.slice(0, 6)}...{walletAddress?.slice(-5)}

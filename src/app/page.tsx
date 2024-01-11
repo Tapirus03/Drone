@@ -17,6 +17,7 @@ import MainPageImageRight from "public/main-page-right.png";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import NebulaLogoImage from "public/nebula-logo.png";
+import EarthImage from "public/earth.png";
 
 export default function App() {
   const {
@@ -41,7 +42,7 @@ export default function App() {
       ) : (
         <>
           <LogoBox>
-            <LogoImage src={NebulaLogoImage} alt="logo" />
+            <LogoImage src={EarthImage} alt="logo" />
             <LogoTitle>EARTH</LogoTitle>
           </LogoBox>
           <ImgBox>
