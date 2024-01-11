@@ -258,7 +258,7 @@ export const ReadQrcode = ({ isSuccess }: Props) => {
 
 const Wrapper = styled.div(() => [
   tw`
-    flex-center flex-col h-full bg-gray7 gap-12 p-24
+    flex-center flex-col h-full bg-gray7 p-24
 `,
 ]);
 
@@ -271,7 +271,7 @@ const FooterBarBox = tw.div`
 `;
 
 const QrReaderVideo = tw.video`
-    w-full h-300
+  w-full h-full
 `;
 
 const LoadingWrapper = tw.div`
