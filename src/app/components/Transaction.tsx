@@ -15,17 +15,28 @@ interface TransactionProps {
   setTransactionSuccess: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export function Transaction({
-  transactionSuccess,
-  setTransactionSuccess,
-}: TransactionProps) {
-  const { wallet, counterContract } = useWalletAuth();
-  const [isTransactionLoading, setIsTransactionLoading] =
-    useState<boolean>(false);
-  const [transactionSended, setTransactionSended] =
-    useState<RelayTransactionResponse | null>(null);
-  const [transactionResponse, setTransactionResponse] =
-    useState<TransactionReceipt | null>(null);
+export async function sendTransaction(fromAddress: String, toAddress: String, sendamount: number) {
+  const ethers = require("ethers");
+
+  const provider = new ethers.providers.JsonRpcProvider("<YOUR_INFURA_API_URL>");
+  const wallet = new ethers.Wallet("<PRIVATE_KEY>", provider);
+
+  const tx = {
+    to: toAddress,
+    value: ethers.utils.parseEther(sendamount.toString()),
+  };
+
+  const sendResult = await wallet.sendTransaction(tx);
+  console.log("Transaction sent:", sendResult);
+
+  return sendResult;
+}
+
+export function Transaction({ transactionSuccess, setTransactionSuccess }: TransactionProps) {
+  const { wallet, contract } = useWalletAuth();
+  const [isTransactionLoading, setIsTransactionLoading] = useState<boolean>(false);
+  const [transactionSended, setTransactionSended] = useState<RelayTransactionResponse | null>(null);
+  const [transactionResponse, setTransactionResponse] = useState<TransactionReceipt | null>(null);
   const [transactionFailure, setTransactionFailure] = useState(false);
   const [nftBalance, setNftBalance] = useState<number>(0);
 
@@ -56,7 +67,7 @@ export function Transaction({
   useEffect(() => {
     if (wallet) {
       (async () => {
-        const balance = await counterContract!.counters(wallet.getAddress());
+        const balance = await contract!.counters(wallet.getAddress());
         setNftBalance(Number(balance));
       })();
     }
@@ -72,12 +83,12 @@ export function Transaction({
     try {
       if (!wallet) throw new Error("No wallet instance");
 
-      const tx: RelayTransactionResponse = await counterContract!.count();
+      const tx: RelayTransactionResponse = await contract!.count();
       setTransactionSended(tx);
 
       const txResponse = await tx.wait();
 
-      const balance = await counterContract!.counters(wallet.getAddress());
+      const balance = await contract!.counters(wallet.getAddress());
       setNftBalance(Number(balance));
 
       setTransactionResponse(txResponse);
@@ -102,10 +113,7 @@ export function Transaction({
         </div>
       </div>
       {transactionSended && !transactionResponse && (
-        <Alert
-          state="information"
-          content="Transaction in progress.. (est. time 10 sec)"
-        />
+        <Alert state="information" content="Transaction in progress.. (est. time 10 sec)" />
       )}
       {transactionSuccess && (
         <Alert
@@ -117,9 +125,7 @@ export function Transaction({
           }}
         />
       )}
-      {transactionFailure && (
-        <Alert state="error" content="Transaction Failed !" />
-      )}
+      {transactionFailure && <Alert state="error" content="Transaction Failed !" />}
     </main>
   );
 }

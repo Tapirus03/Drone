@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import FooterBar from "../components/footer/footer-bar";
 import CreditCardImage from "public/credit-card.png";
 import tw, { css, styled } from "twin.macro";
@@ -10,6 +10,8 @@ import congratulation from "public/congratulation.json";
 import EllipseImage from "public/Ellipse.png";
 import EthLogoImage from "public/eth-logo.png";
 import UsdtLogoImage from "public/usdt-logo.png";
+import BnbLogoImage from "public/bnb-logo.png";
+import MaticLogoImage from "public/matic-logo.png";
 import { useWalletAuth } from "../modules/wallet/hooks/useWalletAuth";
 import { useWalletContext } from "../modules/wallet/hooks/useWalletContext";
 
@@ -18,13 +20,16 @@ interface Props {
 }
 
 export const MyPage = ({ isSuccess }: Props) => {
-  const warpperRef = useRef<HTMLDivElement>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
   const { wallet } = useWalletContext();
   const { nfcSerialNumber } = useWalletAuth();
-  const localStorageAddress = window.localStorage.getItem("walletAddress");
-  const parsedAddress = JSON.parse(localStorageAddress || "{}");
-  const walletAddress = parsedAddress[nfcSerialNumber!] || wallet?.getAddress();
+  const [walletAddress, setWalletAddress] = useState<string | null>(null);
 
+  useEffect(() => {
+    const localStorageAddress = window.localStorage.getItem("walletAddress");
+    const parsedAddress = JSON.parse(localStorageAddress || "{}");
+    setWalletAddress(parsedAddress[nfcSerialNumber!] || wallet?.getAddress());
+  }, [nfcSerialNumber, wallet]);
   /* function safeStringify(obj: any, spacer = 2): string {
     const seen = new WeakSet();
 
@@ -44,10 +49,10 @@ export const MyPage = ({ isSuccess }: Props) => {
   } */
 
   useEffect(() => {
-    if (!warpperRef.current) return;
+    if (!wrapperRef.current) return;
     if (!isSuccess) return;
     lottie.loadAnimation({
-      container: warpperRef.current,
+      container: wrapperRef.current,
       renderer: "svg",
       loop: false,
       autoplay: true,
@@ -57,7 +62,7 @@ export const MyPage = ({ isSuccess }: Props) => {
     return () => {
       lottie.destroy();
     };
-  }, [warpperRef, isSuccess]);
+  }, [wrapperRef, isSuccess]);
 
   return (
     <>
@@ -75,43 +80,43 @@ export const MyPage = ({ isSuccess }: Props) => {
             <TokenBox>
               <TokenTopBar1 />
               <TokenBoxTitle>Token Type</TokenBoxTitle>
-              <TokenBoxContent>0</TokenBoxContent>
+              <TokenBoxContent>4</TokenBoxContent>
             </TokenBox>
             <TokenBox>
               <TokenTopBar2 />
               <TokenBoxTitle>Highest Token</TokenBoxTitle>
-              <TokenBoxContent>0</TokenBoxContent>
+              <TokenBoxContent>ETH</TokenBoxContent>
             </TokenBox>
             <TokenBox>
               <TokenTopBar3 />
               <TokenBoxTitle>Lowest Token</TokenBoxTitle>
-              <TokenBoxContent>0</TokenBoxContent>
+              <TokenBoxContent>MATIC</TokenBoxContent>
             </TokenBox>
           </TokenWrapper>
         </TopWrapper>
         <Ellipse src={EllipseImage} alt="credit-card-image" />
-        <LottieWrapper ref={warpperRef} />
+        <LottieWrapper ref={wrapperRef} />
         <BottomWrapper>
           <TokenBalanceWrapper>
             <TokenBalanceBox>
               <TokenImage src={EthLogoImage} alt="credit-card-image" />
               <TokenName>Ethereum</TokenName>
-              <TokenBalance>0 USD</TokenBalance>
+              <TokenBalance>321.21 USD</TokenBalance>
             </TokenBalanceBox>
             <TokenBalanceBox>
               <TokenImage src={UsdtLogoImage} alt="credit-card-image" />
               <TokenName>Tether</TokenName>
-              <TokenBalance>0 USD</TokenBalance>
+              <TokenBalance>142.12 USD</TokenBalance>
             </TokenBalanceBox>
             <TokenBalanceBox>
-              <TokenImage src={EthLogoImage} alt="credit-card-image" />
+              <TokenImage src={BnbLogoImage} alt="credit-card-image" />
               <TokenName>Token Name</TokenName>
-              <TokenBalance>0 USD</TokenBalance>
+              <TokenBalance>23.12 USD</TokenBalance>
             </TokenBalanceBox>
             <TokenBalanceBox>
-              <TokenImage src={EthLogoImage} alt="credit-card-image" />
+              <TokenImage src={MaticLogoImage} alt="credit-card-image" />
               <TokenName>Token Name</TokenName>
-              <TokenBalance>0 USD</TokenBalance>
+              <TokenBalance>2.45 USD</TokenBalance>
             </TokenBalanceBox>
           </TokenBalanceWrapper>
         </BottomWrapper>

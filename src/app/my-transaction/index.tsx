@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import FooterBar from "../components/footer/footer-bar";
 import QrCodeImage from "public/qr-code.png";
 import tw, { css, styled } from "twin.macro";
@@ -9,20 +9,36 @@ import lottie from "lottie-web/build/player/lottie_light";
 import congratulation from "public/congratulation.json";
 import { Database } from "@tableland/sdk";
 import { ConnectAdaptor, SupportedNetworks } from "@cometh/connect-sdk";
+import { useWalletContext } from "../modules/wallet/hooks/useWalletContext";
+import { useWalletAuth } from "../modules/wallet/hooks/useWalletAuth";
 
 interface Props {
   isSuccess: boolean;
-  qrcode: Text;
-  receiveaddress: Text;
-  date: Text;
-  token: Text;
+}
+
+interface QrCodeData {
+  qrcode: string;
+  receiveaddress: string;
+  date: string;
+  token: string;
   amount: number;
   gaslimit: number;
   validhour: number;
 }
 
 export const MyTransaction = ({ isSuccess }: Props) => {
+  const [tablelandData, setTablelandData] = useState<QrCodeData[]>([]);
   const warpperRef = useRef<HTMLDivElement>(null);
+  const { wallet } = useWalletContext();
+  const { nfcSerialNumber } = useWalletAuth();
+  const [walletAddress, setWalletAddress] = useState<string | null>(null);
+  const [message, setMessage] = useState("Loading...");
+
+  useEffect(() => {
+    const localStorageAddress = window.localStorage.getItem("walletAddress");
+    const parsedAddress = JSON.parse(localStorageAddress || "{}");
+    setWalletAddress(parsedAddress[nfcSerialNumber!] || wallet?.getAddress());
+  }, [nfcSerialNumber, wallet]);
 
   useEffect(() => {
     if (!warpperRef.current) return;
@@ -40,54 +56,80 @@ export const MyTransaction = ({ isSuccess }: Props) => {
     };
   }, [warpperRef, isSuccess]);
 
-  const tableName: string = "nebulaone_80001_8020";
+  const tableName: string = "neblula_one_80001_8032";
   const db = new Database();
   const readOnTable = async () => {
-    const { results } = await db.prepare(`SELECT * FROM ${tableName};`).all();
-    console.log(results);
+    const { results } = await db
+      .prepare(`SELECT * FROM ${tableName} WHERE receiveaddress = '${walletAddress}'`)
+      .all();
+    setTablelandData(results as QrCodeData[]);
   };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setMessage("No QR code has been created");
+    }, 5000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    readOnTable();
+  }, [tablelandData]);
 
   return (
     <>
       <Wrapper>
-        <button onClick={readOnTable}>read</button>
-        <QrWrapper>
-          <QrTitle>Transaction Qr Code</QrTitle>
-          <QrImage src={QrCodeImage} alt="qr-code-image" />
-        </QrWrapper>
-        <BolderBox>
-          <LeftCircle />
-          <DotBolder />
-          <RightCircle />
-        </BolderBox>
-        <TransactionWrapper>
-          <TransactionBox>
-            <TransactionContentBox>
-              <TransactionTitle>Name</TransactionTitle>
-              <TransactionContent>0</TransactionContent>
-            </TransactionContentBox>
-            <TransactionContentBox>
-              <TransactionTitle>Date</TransactionTitle>
-              <TransactionContent>0</TransactionContent>
-            </TransactionContentBox>
-            <TransactionContentBox>
-              <TransactionTitle>Token</TransactionTitle>
-              <TransactionContent>0</TransactionContent>
-            </TransactionContentBox>
-            <TransactionContentBox>
-              <TransactionTitle>Amount</TransactionTitle>
-              <TransactionContent>0</TransactionContent>
-            </TransactionContentBox>
-            <TransactionContentBox>
-              <TransactionTitle>Gas Fee</TransactionTitle>
-              <TransactionContent>0</TransactionContent>
-            </TransactionContentBox>
-            <TransactionContentBox>
-              <TransactionTitle>Validity</TransactionTitle>
-              <TransactionContent>0</TransactionContent>
-            </TransactionContentBox>
-          </TransactionBox>
-        </TransactionWrapper>
+        {/* <button onClick={readOnTable}>read</button> */}
+        {tablelandData.length ? (
+          tablelandData.map((data, index) => (
+            <div key={index}>
+              <QrWrapper>
+                <QrTitle>Transaction Qr Code</QrTitle>
+                <img src={data.qrcode} alt="qr-code-image" width={200} height={200} />
+              </QrWrapper>
+              <BolderBox>
+                <LeftCircle />
+                <DotBolder />
+                <RightCircle />
+              </BolderBox>
+              <TransactionWrapper>
+                <TransactionBox>
+                  <TransactionContentBox>
+                    <TransactionTitle>Name</TransactionTitle>
+                    <TransactionContent>
+                      {data.receiveaddress
+                        ? `${data.receiveaddress.slice(0, 7)}...${data.receiveaddress.slice(-6)}`
+                        : ""}
+                    </TransactionContent>
+                  </TransactionContentBox>
+                  <TransactionContentBox>
+                    <TransactionTitle>Date</TransactionTitle>
+                    <TransactionContent>{data.date}</TransactionContent>
+                  </TransactionContentBox>
+                  <TransactionContentBox>
+                    <TransactionTitle>Token</TransactionTitle>
+                    <TransactionContent>{data.token}</TransactionContent>
+                  </TransactionContentBox>
+                  <TransactionContentBox>
+                    <TransactionTitle>Amount</TransactionTitle>
+                    <TransactionContent>{data.amount / 1e18}</TransactionContent>
+                  </TransactionContentBox>
+                  <TransactionContentBox>
+                    <TransactionTitle>Gas Limit</TransactionTitle>
+                    <TransactionContent>{data.gaslimit}</TransactionContent>
+                  </TransactionContentBox>
+                  <TransactionContentBox>
+                    <TransactionTitle>Validity</TransactionTitle>
+                    <TransactionContent>{data.validhour}hour</TransactionContent>
+                  </TransactionContentBox>
+                </TransactionBox>
+              </TransactionWrapper>
+            </div>
+          ))
+        ) : (
+          <div className="font-r-16 text-white mt-10">{message}</div>
+        )}
       </Wrapper>
 
       <FooterBarBox>
@@ -98,11 +140,7 @@ export const MyTransaction = ({ isSuccess }: Props) => {
 };
 
 const Wrapper = styled.div(() => [
-  tw`
-    flex flex-col h-full
-    items-center justify-center 
-    overflow-y-auto mt-24
-`,
+  tw`flex flex-col items-center justify-center h-full mt-24 overflow-y-auto `,
 ]);
 
 const FooterBarBox = tw.div`
@@ -111,7 +149,7 @@ const FooterBarBox = tw.div`
 
 const QrWrapper = tw.div`
   flex-center flex-col w-328 h-300 h-1/2 bg-gray7
-  rounded-t-20 gap-27
+  rounded-t-20 gap-27 mt-10
 `;
 
 const QrTitle = tw.div`
@@ -149,10 +187,7 @@ const TransactionContentBox = tw.div`
 `;
 
 const TransactionBox = styled.div(() => [
-  tw`
-    flex-center flex-col w-full h-full
-    bg-gray2 rounded-20 py-16 px-20
-`,
+  tw`flex-col w-full h-full px-20 py-16 flex-center bg-gray2 rounded-20`,
   css`
     border-radius: 16px;
     border: 1px solid #cfcffc5c;
