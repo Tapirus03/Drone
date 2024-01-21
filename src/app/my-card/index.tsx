@@ -10,6 +10,7 @@ import congratulation from "public/congratulation.json";
 import { useWalletContext } from "../modules/wallet/hooks/useWalletContext";
 import { useWalletAuth } from "../modules/wallet/hooks/useWalletAuth";
 import NebulaLogoImage from "public/nebula-logo.png";
+import EarthImage from "public/earth.png";
 
 interface Props {
   isSuccess: boolean;
@@ -32,7 +33,7 @@ export const MyCard = ({ isSuccess }: Props) => {
         <Title>My Credit Card</Title>
         <CardImageWrapper>
           <CardImage>
-            <CardLogo src={NebulaLogoImage} alt="mastercard" width={56} height={34} />
+            <CardLogo src={EarthImage} alt="mastercard" width={56} height={34} />
             <CardTitle>EARTH</CardTitle>
             <CardUser>John Doe</CardUser>
             <CardAddress>

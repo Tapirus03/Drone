@@ -107,7 +107,7 @@ export const MyPage = ({ isSuccess }: Props) => {
               </TokenBalanceBox2>
             </TokenBalanceBox>
             <TokenBalanceBox>
-              <TokenImage src={UsdtLogoImage} algitt="credit-card-image" />
+              <TokenImage src={UsdtLogoImage} alt="credit-card-image" />
               <TokenName>Tether</TokenName>
               <TokenBalanceBox2>
                 <TokenBalance>149.98 USDT</TokenBalance>
